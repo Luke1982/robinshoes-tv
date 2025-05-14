@@ -1,0 +1,16 @@
+{
+    "name": "tv-products-block",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "build": "wp-scripts build",
+        "start": "wp-scripts start"
+    },
+    "devDependencies": {
+        "@wordpress/scripts": "^24.0.0",
+        "path-browserify": "^1.0.1"
+    },
+    "dependencies": {
+        "swiper": "^11.2.6"
+    }
+}

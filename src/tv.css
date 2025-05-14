@@ -1,0 +1,51 @@
+img {
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+.tv-product-title {
+    position: absolute;
+    right: 5%;
+    top: 5%;
+}
+#qlwapp, .grecaptcha-badge {
+    display: none !important;
+}
+#tv-logo {
+    position: fixed;
+    left: 30px;
+    top: 30px;
+    z-index: 9999;
+    width: 100px;
+    height: auto;
+}
+.wp-block-robinshoes-product-price {
+    display: flex;
+    flex-direction: column;
+}
+.wp-block-robinshoes-product-price .hasfromprice {
+font-size: 1.2rem;
+color: rgb(27, 32, 58);
+}
+.wp-block-robinshoes-product-price .hasfromprice .amount {
+position: relative;
+}
+.wp-block-robinshoes-product-price .hasfromprice .amount:after {
+position: absolute;
+content: "";
+width: 90%;
+border-bottom: 1px solid rgb(27, 32, 58);
+left: 0;
+top: 50%;
+transform: rotate(-10deg);
+opacity: 0.7;
+}
+.wp-block-robinshoes-product-price .forprice {
+color: rgb(170, 143, 14);
+font-weight: 600;
+font-size: 2.2rem;
+margin-top: -0.8rem;
+}
+.wp-block-robinshoes-product-price .hasnofromprice {
+display: none;
+}
