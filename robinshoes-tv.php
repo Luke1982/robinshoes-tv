@@ -2,7 +2,7 @@
 /**
  * Plugin Name: TV Products and Block
  * Description: Adds a "Voeg toe aan TV" checkbox to WooCommerce products, registers a CPT "TV afbeeldingen", and provides a Gutenberg block to display selected products plus featured images of TV afbeeldingen.
- * Version: 1.0
+ * Version: 1.6
  * Author: Your Name
  * Text Domain: tv-products-block
  *
@@ -11,6 +11,14 @@
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+/**
+ * Create or update a zero-length flag file in the plugin directory.
+ */
+function tv_create_flag_file() {
+	$flag_file = plugin_dir_path( __FILE__ ) . 'tv-flag.trigger';
+	@touch( $flag_file ); //phpcs:ignore
 }
 
 /**
@@ -47,6 +55,7 @@ function tv_save_custom_checkbox( $post_id ) {
 	$value = isset( $_POST['_tv_checkbox'] ) ? 'yes' : 'no';
 	$value = sanitize_text_field( $value );
 	update_post_meta( $post_id, '_tv_checkbox', $value );
+	tv_create_flag_file();
 }
 add_action( 'woocommerce_process_product_meta', 'tv_save_custom_checkbox' );
 
@@ -131,6 +140,7 @@ function tv_quick_edit_save( $post_id ) {
 	}
 	$new = isset( $_REQUEST['_tv_checkbox'] ) ? 'yes' : 'no';
 	update_post_meta( $post_id, '_tv_checkbox', sanitize_text_field( $new ) );
+	tv_create_flag_file();
 }
 add_action( 'save_post', 'tv_quick_edit_save' );
 
@@ -217,6 +227,7 @@ function tv_handle_bulk_action() {
 			update_post_meta( $post_id, '_tv_checkbox', 'no' );
 		}
 	}
+	tv_create_flag_file();
 
 	// Redirect back without our query args.
 	wp_redirect( remove_query_arg( array( 'tv_bulk_action', 'post', 'tv_bulk_edit_nonce' ), wp_get_referer() ) );
@@ -344,7 +355,29 @@ function tv_register_block() {
 		)
 	);
 }
-	add_action( 'init', 'tv_register_block' );
+add_action( 'init', 'tv_register_block' );
+
+/**
+ * (2) Whenever a TV-afbeelding CPT is saved, also touch the flag file.
+ *
+ * @param int     $post_id The ID of the post being saved.
+ * @param WP_Post $post    The post object.
+ * @param bool    $update  Whether this is an existing post being updated.
+ */
+function tv_flag_on_tv_afbeelding_save( $post_id, $post, $update ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( 'tv_afbeelding' !== $post->post_type ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+
+	tv_create_flag_file();
+}
+add_action( 'save_post_tv_afbeelding', 'tv_flag_on_tv_afbeelding_save', 10, 3 );
 
 
 /**
@@ -412,7 +445,7 @@ function tv_render_products_block( $attributes ) {
 		++$count;
 		$thumb_url = get_the_post_thumbnail_url( $item->ID, 'full' );
 		$raw_title = get_the_title( $item->ID );
-		echo '<div class="swiper-slide">';
+		echo '<div class="swiper-slide tv-image-slide">';
 		if ( $thumb_url ) {
 			echo '<img src="' . esc_url( $thumb_url ) . '" alt="' . esc_attr( $raw_title ) . '">';
 		}
