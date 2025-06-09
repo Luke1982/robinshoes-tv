@@ -25,6 +25,10 @@ img {
     top: 40px;
     text-align: right;
 }
+.tv-product-title h3 {
+    font-size: 2rem;
+    margin: 0;
+}
 #qlwapp, .grecaptcha-badge {
     display: none !important;
 }
@@ -33,7 +37,7 @@ img {
     left: 30px;
     top: 30px;
     z-index: 9999;
-    width: 100px;
+    width: 200px;
     height: auto;
 }
 .wp-block-robinshoes-product-price {

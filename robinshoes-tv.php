@@ -2,7 +2,7 @@
 /**
  * Plugin Name: TV Products and Block
  * Description: Adds a "Voeg toe aan TV" checkbox to WooCommerce products, registers a CPT "TV afbeeldingen", and provides a Gutenberg block to display selected products plus featured images of TV afbeeldingen.
- * Version: 1.6
+ * Version: 1.74
  * Author: Your Name
  * Text Domain: tv-products-block
  *
@@ -418,6 +418,7 @@ function tv_render_products_block( $attributes ) {
 		++$count;
 		$img_url   = $prod->get_image_id() ? wp_get_attachment_image_url( $prod->get_image_id(), 'full' ) : '';
 		$raw_title = $prod->get_name();
+		$raw_title = preg_replace( '/Nr\. \d{5}/', '', $raw_title );
 		if ( is_a( $prod, 'WC_Product_Variable' ) ) {
 			$var_max_price = $prod->get_variation_regular_price( 'max' );
 			$sale_price    = $prod->get_variation_sale_price( 'max' );
